@@ -4,19 +4,51 @@ using UnityEngine;
 
 public class MovingCamera : MonoBehaviour
 {
-    public float dragSpeed = 0.003f; // 0.003 looks like the best value
+    public float mouseDragSpeed = 0.6f; // 0.5 looks like the best value
+    public float touchDragSpeed = 0.003f; // 0.003 looks like the best value
     public float zoomSpeed = 0.2f; // 0.2 looks like the best value
     public float orthographicSizeMin = 1f;
     public float orthographicSizeMax = 8f;
-
 
     float xMin = -3f;
     float xMax = 15.0f;
     float yMin = -1.7f;
     float yMax = 6.3f;
 
-    // Update is called once per frame
     void Update()
+    {
+#if UNITY_EDITOR
+        HandleMouseInput();
+#endif
+
+#if UNITY_ANDROID
+        HandleTouchInput();
+#endif
+    }
+
+    Vector3 mousePrevPosition;
+    void HandleMouseInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            mousePrevPosition = Input.mousePosition;
+            return;
+        }
+
+        if (!Input.GetMouseButton(0)) return;
+
+        Vector3 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - mousePrevPosition);
+
+        transform.Translate(-pos.x * mouseDragSpeed, -pos.y * mouseDragSpeed, 0);
+
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, xMin, xMax),
+            Mathf.Clamp(transform.position.y, yMin, yMax),
+            transform.position.z
+        );
+    }
+
+    void HandleTouchInput()
     {
         if (Input.touchCount > 0)
         {
@@ -26,7 +58,7 @@ public class MovingCamera : MonoBehaviour
             {
                 Vector2 touchDeltaPosition = touchZero.deltaPosition;
 
-                transform.Translate(-touchDeltaPosition.x * dragSpeed, -touchDeltaPosition.y * dragSpeed, 0);
+                transform.Translate(-touchDeltaPosition.x * touchDragSpeed, -touchDeltaPosition.y * touchDragSpeed, 0);
 
                 transform.position = new Vector3(
                     Mathf.Clamp(transform.position.x, xMin, xMax),
