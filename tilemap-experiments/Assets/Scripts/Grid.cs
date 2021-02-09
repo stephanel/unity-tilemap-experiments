@@ -44,8 +44,6 @@ public class Grid
 
         DebugDrawLine(0, height, width, height);
         DebugDrawLine(width, 0, width, height);
-
-        SetValue(3, 2, 28);
     }
 
     void DebugDrawLine(int x0, int y0, int x1, int y1)
