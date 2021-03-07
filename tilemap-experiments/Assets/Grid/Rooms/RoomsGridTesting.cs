@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RoomsGridTesting : MonoBehaviour
 {
+    [SerializeField] private RoomsGridRenderer roomsGridRenderer;
+
     RoomsGrid grid;
 
     // Start is called before the first frame update
@@ -42,6 +44,8 @@ public class RoomsGridTesting : MonoBehaviour
         };
 
         grid = new RoomsGrid(rooms, 20);
+
+        roomsGridRenderer.SetGrid(grid);
     }
 
     // Update is called once per frame

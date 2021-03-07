@@ -6,11 +6,11 @@ using UnityEngine;
 public class RoomsGrid
 {
     List<List<Room>> floors;
-    int floorHeight = 40;
-    int width, height;
+    Dictionary<Vector2, Room> RoomByPosition = new Dictionary<Vector2, Room>();
+    public int FloorHeight { get; private set; } = 40;
+    public int Width { get; private set; }
+    public int Height { get; private set; }
     Vector3 originPosition;
-
-    TextMesh[,] debugTextArray;
 
     public RoomsGrid(List<List<Room>> floors, int floorHeight)
         : this(floors, floorHeight, Vector3.zero)
@@ -19,15 +19,13 @@ public class RoomsGrid
     public RoomsGrid(List<List<Room>> floors, int floorHeight, Vector3 originPosition)
     {
         this.floors = floors;
-        this.floorHeight = floorHeight;
+        this.FloorHeight = floorHeight;
         this.originPosition = originPosition;
 
-        width = floors.Max(floor => floor.Sum(room => room.Width));
-        height = floorHeight * floors.Count;
+        Width = floors.Max(floor => floor.Sum(room => room.Width));
+        Height = floorHeight * floors.Count;
 
-        Debug.Log($"(width,height) = ({width},{height})");
-
-        debugTextArray = new TextMesh[width, height];
+        Debug.Log($"(width,height) = ({Width},{Height})");
 
         int x = (int)this.originPosition.x;
         int y = (int)this.originPosition.y;
@@ -38,16 +36,7 @@ public class RoomsGrid
             {
                 Debug.Log($"{room.Name} - {room.Width} ({x};{y})");
 
-                debugTextArray[x, y] = room.CreateWorldText(
-                    null,
-                    GetWorldPosition(x, y) + new Vector3(room.Width, floorHeight) * .5f,
-                    20,
-                    Color.white,
-                    TextAnchor.MiddleCenter,
-                    TextAlignment.Center);
-
-                DebugDrawLine(x, y, x, y + floorHeight);
-                DebugDrawLine(x, y, x + room.Width, y);
+                RoomByPosition.Add(new Vector2(x, y), room);
 
                 x += room.Width;
 
@@ -57,9 +46,6 @@ public class RoomsGrid
             x = 0;
             y += floorHeight;
         }
-
-        DebugDrawLine(0, height, width, floorHeight * floors.Count);
-        DebugDrawLine(width, 0, width, height);
     }
 
     void Room_OnSelect(object sender, Room.OnSelectEventArgs e)
@@ -84,19 +70,26 @@ public class RoomsGrid
         }
     }
 
-    void DebugDrawLine(int x0, int y0, int x1, int y1)
+    public List<List<Room>> GetFloors() => this.floors;
+
+    public Vector3 GetWorldPosition(Room room)
     {
-        Debug.DrawLine(
-            GetWorldPosition(x0, y0),
-            GetWorldPosition(x1, y1),
-            Color.white,
-            100f);
+        Vector2 position = RoomByPosition
+            .Where(pair => pair.Value == room)
+            .Select(pair => pair.Key)
+            .FirstOrDefault();
+
+        if (position == null)
+        {
+            Debug.Log($"No position found for room {room.Name}.");
+        }
+
+        return GetWorldPosition((int)position.x, (int)position.y);
+        // return position;
     }
 
-    Vector3 GetWorldPosition(int x, int y)
-    {
-        return new Vector3(x, y) + originPosition;
-    }
+    public Vector3 GetWorldPosition(int x, int y)
+        => new Vector3(x, y) + originPosition;
 
     void GetXY(Vector3 worldPosition, out int x, out int y)
     {
@@ -133,7 +126,7 @@ public class RoomsGrid
 
     public Room GetGridObject(int x, int y)
     {
-        if (x >= (int)originPosition.x && y >= (int)originPosition.y && x < width && y < height)
+        if (x >= (int)originPosition.x && y >= (int)originPosition.y && x < Width && y < Height)
         {
             int? floorIndex = GetFloorIndex(x, y);
 
@@ -145,7 +138,7 @@ public class RoomsGrid
 
     int? GetFloorIndex(int x, int y)
     {
-        int foorCeilingY = (int)originPosition.y + floorHeight;
+        int foorCeilingY = (int)originPosition.y + FloorHeight;
 
         for (int floorIndex = 0; floorIndex < floors.Count; floorIndex++)
         {
@@ -156,7 +149,7 @@ public class RoomsGrid
                 return floorIndex;
             }
 
-            foorCeilingY += floorHeight;
+            foorCeilingY += FloorHeight;
         }
 
         return null;
