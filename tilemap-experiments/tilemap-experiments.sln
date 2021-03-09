@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{df291428-314d-44b1-dcd4-4e0de263937c}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyScriptAssembly", "MyScriptAssembly.csproj", "{c03a9052-bf5d-b096-9f09-038b83dfb232}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests.csproj", "{21c5398e-e2e8-506a-2b8a-62b76fb1df89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,6 +14,10 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{df291428-314d-44b1-dcd4-4e0de263937c}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{df291428-314d-44b1-dcd4-4e0de263937c}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{c03a9052-bf5d-b096-9f09-038b83dfb232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{c03a9052-bf5d-b096-9f09-038b83dfb232}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21c5398e-e2e8-506a-2b8a-62b76fb1df89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21c5398e-e2e8-506a-2b8a-62b76fb1df89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

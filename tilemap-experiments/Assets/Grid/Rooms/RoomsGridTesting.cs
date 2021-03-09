@@ -8,6 +8,8 @@ public class RoomsGridTesting : MonoBehaviour
 
     RoomsGrid grid;
 
+    bool randomize = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +44,12 @@ public class RoomsGridTesting : MonoBehaviour
                 Room.Create("Room1", 30),
             }
         };
+
+        if (randomize)
+        {
+            var roomRandomizer = new RoomRandomizer(150);
+            rooms = roomRandomizer.Randomize();
+        }
 
         grid = new RoomsGrid(rooms, 20);
 

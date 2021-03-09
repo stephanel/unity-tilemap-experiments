@@ -37,18 +37,21 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\SelectingRoom.cs" />
+     <Compile Include="Assets\Grid\Rooms\RoomRandomizer.cs" />
+     <Compile Include="Assets\Grid\Rooms\RoomsGridTesting.cs" />
+     <Compile Include="Assets\Scripts\MeshUtils.cs" />
      <Compile Include="Assets\Scripts\MovingCamera.cs" />
      <Compile Include="Assets\Grid\CustomGrid\Grid.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
      <Compile Include="Assets\Scripts\MoveByTouch.cs" />
      <Compile Include="Assets\Grid\CustomGrid\CustomGridTesting.cs" />
-     <Compile Include="Assets\Grid\GenericGrid\GenericGridTesting.cs" />
-     <Compile Include="Assets\Grid\GenericGrid\HeatmapGridObject.cs" />
-     <Compile Include="Assets\Grid\GenericGrid\GenericGrid.cs" />
-     <Compile Include="Assets\Grid\HeatmapVisual\HeatmapVisualTesting.cs" />
-     <Compile Include="Assets\Grid\Rooms\RoomsGrid.cs" />
-     <Compile Include="Assets\Grid\Rooms\RoomsGridTesting.cs" />
      <Compile Include="Assets\Grid\Rooms\Room.cs" />
+     <Compile Include="Assets\Grid\GenericGrid\GenericGridTesting.cs" />
+     <Compile Include="Assets\Grid\GenericGrid\GenericGrid.cs" />
+     <Compile Include="Assets\Grid\GenericGrid\HeatmapGridObject.cs" />
+     <Compile Include="Assets\Grid\Rooms\RoomsGrid.cs" />
+     <Compile Include="Assets\Grid\HeatmapVisual\HeatmapVisualTesting.cs" />
+     <Compile Include="Assets\Grid\Rooms\RoomsGridRenderer.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
