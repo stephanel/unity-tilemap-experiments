@@ -18,21 +18,19 @@ public class RoomRandomizerTests
 
     [TestCase(100)]
     [TestCase(200)]
+    [TestCase(500)]
     [TestCase(1000)]
-    public void RoomRandomizerGenerateTotalRoomWidthEqualsToGridWidth(int totalWidth)
+    public void RoomRandomizerGenerateTotalRoomWidthEqualsToGridWidth(int mapWidth)
     {
-        var floors = new RoomRandomizer(totalWidth).Randomize();
+        var floors = new RoomRandomizer(mapWidth).Randomize();
 
-        // Assert.That(floors, Is.All.Matches<List<Room>>(
-        //     floor => floor.Sum(room => room.Width) == totalWidth));
-
-        foreach (var floor in floors)
+        foreach (var rooms in floors)
         {
-            var roomWidth = floor.Sum(room => room.Width);
+            var totalRoomsWidth = rooms.Sum(room => room.Width);
 
-            Assert.That(roomWidth, Is.EqualTo(totalWidth));
+            Assert.That(totalRoomsWidth, Is.EqualTo(mapWidth));
 
-            foreach (var room in floor)
+            foreach (var room in rooms)
             {
                 Assert.That(room.Width, Is.GreaterThanOrEqualTo(Room.MinWidth));
                 // Assert.That(room.Width, Is.LessThanOrEqualTo(Room.MaxWidth));
