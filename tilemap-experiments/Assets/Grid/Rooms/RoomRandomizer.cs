@@ -42,20 +42,22 @@ public class RoomRandomizer
 
     List<Room> RandomizeRoomsOnFloor()
     {
-        int minWidth = 10;
-        int maxWidth = 60;
-
         int floorWidth = 0;
 
         List<Room> floor = new List<Room>();
         do
-        {  
-            var roomWidth = rng.Next(minWidth, maxWidth);
+        {
+            var roomWidth = rng.Next(Room.MinWidth, Room.MaxWidth);
 
             var availableWidth = totalWidth - floorWidth;
 
-            roomWidth = Math.Min(roomWidth, availableWidth); 
- 
+            roomWidth = Math.Min(roomWidth, availableWidth);
+
+            var remainingWidthAfter = totalWidth - (floorWidth + roomWidth);
+            if(remainingWidthAfter <= Room.MinWidth) {
+                roomWidth += remainingWidthAfter;
+            }
+
             var room = Room.Create($"Room{roomIndex++}", roomWidth);
             floor.Add(room);
 

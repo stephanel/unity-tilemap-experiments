@@ -51,8 +51,6 @@ public class RoomsGridRenderer : MonoBehaviour
                 int x = (int)roomWorldPosition.x;
                 int y = (int)roomWorldPosition.y;
 
-                Debug.Log($"Room location... {room.Name} - ({roomWorldPosition.x};{roomWorldPosition.y})");
-
                 RenderRoomVertices(x, y, room.Width, grid.FloorHeight,
                     out Vector3[] roomVertices,
                     out int[] roomTriangles,

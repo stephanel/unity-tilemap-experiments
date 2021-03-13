@@ -31,6 +31,12 @@ public class RoomRandomizerTests
             var roomWidth = floor.Sum(room => room.Width);
 
             Assert.That(roomWidth, Is.EqualTo(totalWidth));
+
+            foreach (var room in floor)
+            {
+                Assert.That(room.Width, Is.GreaterThanOrEqualTo(Room.MinWidth));
+                // Assert.That(room.Width, Is.LessThanOrEqualTo(Room.MaxWidth));
+            }
         }
     }
 

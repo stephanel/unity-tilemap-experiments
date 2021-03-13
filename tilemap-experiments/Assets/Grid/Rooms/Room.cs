@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Room
 {
+    public const int MinWidth = 25;
+    public const int MaxWidth = 80;
+
     public EventHandler<OnSelectEventArgs> OnSelect;
     public class OnSelectEventArgs { }
 

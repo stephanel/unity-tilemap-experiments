@@ -34,7 +34,7 @@ public class RoomsGrid
         {
             foreach (var room in floor)
             {
-                Debug.Log($"{room.Name} - {room.Width} ({x};{y})");
+                Debug.Log($"{room.Name} - {room.Width} (x={x};y={y}) (w={room.Width};h={floorHeight})");
 
                 RoomByPosition.Add(new Vector2(x, y), room);
 
