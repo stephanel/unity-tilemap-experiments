@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
@@ -8,34 +6,93 @@ using UnityEngine.TestTools;
 public class RoomRandomizerTests
 {
     [Test]
-    public void RoomRandomizerGenerateBetween2And6Floors()
+    public void ShouldThrowRoomsTotalWidthSettingNotValide()
+    {
+        Assert.That(() => { new RoomRandomizer(1); },
+            Throws.Exception.TypeOf<RoomsTotalWidthSettingNotValide>());
+    }
+
+    [Test]
+    public void ShouldGenerateArrayOfValideWidth()
+    {
+        var arrayOfWidth = new RoomRandomizer(0).GenerateArrayOfPossibleWidthForRooms();
+
+        CheckThatPossibleWidthForRoomsCount(arrayOfWidth.Length);
+
+        foreach (var width in arrayOfWidth)
+        {
+            CheckThatWidthIsGreaterThanOrEqualToMinWidth(width);
+            CheckThatWidthIsLessThanOrEqualToMaxWidth(width);
+            CheckThatWidthIsMultipleOfWidthFractional(width);
+        }
+    }
+
+    [Test]
+    public void ShouldGenerateValideFloorsCount()
     {
         var floors = new RoomRandomizer(0).Randomize();
 
-        Assert.That(floors.Count, Is.GreaterThanOrEqualTo(RoomRandomizer.FloorCounts.Two));
-        Assert.That(floors.Count, Is.LessThanOrEqualTo(RoomRandomizer.FloorCounts.Six));
+        CheckThatFloorsCountIsGreaterThanOrEqualToThree(floors.Count);
+        CheckThatFloorsCountIsLessThanOrEqualToSix(floors.Count);
     }
 
-    [TestCase(100)]
-    [TestCase(200)]
-    [TestCase(500)]
-    [TestCase(1000)]
-    public void RoomRandomizerGenerateTotalRoomWidthEqualsToGridWidth(int mapWidth)
+    [TestCase(RoomRandomizer.MaxWidth * 2)]
+    [TestCase(RoomRandomizer.MaxWidth * 3)]
+    [TestCase(RoomRandomizer.MaxWidth * 4)]
+    [TestCase(RoomRandomizer.MaxWidth * 5)]
+    [TestCase(RoomRandomizer.MaxWidth * 6)]
+    [TestCase(RoomRandomizer.MaxWidth * 10)]
+    [TestCase(RoomRandomizer.MaxWidth * 20)]
+    [TestCase(RoomRandomizer.MaxWidth * 100)]
+    public void ShouldGenerateAGridOfValideRoomsWidth(int mapWidth)
     {
         var floors = new RoomRandomizer(mapWidth).Randomize();
 
-        foreach (var rooms in floors)
+        foreach (var floor in floors)
         {
-            var totalRoomsWidth = rooms.Sum(room => room.Width);
+            var totalRoomsWidth = floor.Sum(room => room.Width);
 
             Assert.That(totalRoomsWidth, Is.EqualTo(mapWidth));
 
-            foreach (var room in rooms)
+            foreach (var room in floor)
             {
-                Assert.That(room.Width, Is.GreaterThanOrEqualTo(Room.MinWidth));
-                // Assert.That(room.Width, Is.LessThanOrEqualTo(Room.MaxWidth));
+                CheckThatWidthIsGreaterThanOrEqualToMinWidth(room.Width);
+                // CheckThatWidthIsLessThanOrEqualToMaxWidth(room.Width);
+                CheckThatWidthIsMultipleOfWidthFractional(room.Width);
             }
         }
+    }
+
+    void CheckThatPossibleWidthForRoomsCount(int possibleWidthCount)
+    {
+        int expectedValuesCount = (RoomRandomizer.MaxWidth - RoomRandomizer.MinWidth + RoomRandomizer.WidthFractional)
+            / RoomRandomizer.WidthFractional;
+        Assert.That(possibleWidthCount, Is.EqualTo(expectedValuesCount));
+    }
+
+    void CheckThatWidthIsGreaterThanOrEqualToMinWidth(int width)
+    {
+        Assert.That(width, Is.GreaterThanOrEqualTo(RoomRandomizer.MinWidth));
+    }
+
+    void CheckThatWidthIsLessThanOrEqualToMaxWidth(int width)
+    {
+        Assert.That(width, Is.LessThanOrEqualTo(RoomRandomizer.MaxWidth));
+    }
+
+    void CheckThatWidthIsMultipleOfWidthFractional(int width)
+    {
+        Assert.That(width % RoomRandomizer.WidthFractional, Is.EqualTo(0));
+    }
+
+    void CheckThatFloorsCountIsGreaterThanOrEqualToThree(int floorsCount)
+    {
+        Assert.That(floorsCount, Is.GreaterThanOrEqualTo(RoomRandomizer.FloorCounts.Three));
+    }
+
+    void CheckThatFloorsCountIsLessThanOrEqualToSix(int floorsCount)
+    {
+        Assert.That(floorsCount, Is.LessThanOrEqualTo(RoomRandomizer.FloorCounts.Six));
     }
 
     // // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
