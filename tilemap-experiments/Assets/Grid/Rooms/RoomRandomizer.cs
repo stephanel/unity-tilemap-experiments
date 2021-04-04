@@ -24,7 +24,6 @@ public class RoomRandomizer
     private readonly Random rng = new Random();
 
     private int totalWidth;
-    private int roomIndex = 0;
 
     /// <summary>
     /// Generates rooms with random floors count and rooms width.
@@ -60,14 +59,6 @@ public class RoomRandomizer
         return Enumerable.Range(1, floorCount)
             .Select(floorIndex => new List<Room>(RandomizeRoomsOnFloor()))
             .ToList();
-        // List<List<Room>> floors = new List<List<Room>>();
-
-        // for (int i = 0; i < floorCount; i++)
-        // {
-        //     floors.Add(RandomizeRoomsOnFloor());
-        // }
-
-        // return floors;
     }
 
     List<Room> RandomizeRoomsOnFloor()
@@ -89,7 +80,9 @@ public class RoomRandomizer
                 roomWidth += remainingWidthAfter;
             }
 
-            var room = Room.Create($"Room{roomIndex++}", roomWidth);
+            var room = Room.Create(
+                GetRoomType(), 
+                roomWidth);
             floor.Add(room);
 
             floorWidth += roomWidth;
@@ -120,5 +113,12 @@ public class RoomRandomizer
 
         return possibleWidth.ToArray();
 
+    }
+
+    public RoomType GetRoomType()
+    {
+        var maxRoomType = Enum.GetValues(typeof(RoomType)).Cast<int>().Max();
+        var index = rng.Next(1, maxRoomType);
+        return (RoomType)index;
     }
 }

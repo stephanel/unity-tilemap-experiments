@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
@@ -5,6 +6,16 @@ using UnityEngine.TestTools;
 
 public class RoomRandomizerTests
 {
+    [Test]
+    [Repeat(1000)]
+    public void ShouldDefineARandomRoomType()
+    {
+        int maxRoomType = Enum.GetValues(typeof(RoomType)).Cast<int>().Max();
+        int roomType = (int)new RoomRandomizer(0).GetRoomType();
+        Assert.That(roomType, Is.GreaterThan(0));
+        Assert.That(roomType, Is.LessThanOrEqualTo(maxRoomType));
+    }
+
     [Test]
     public void ShouldThrowRoomsTotalWidthSettingNotValide()
     {
