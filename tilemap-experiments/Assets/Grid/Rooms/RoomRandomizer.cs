@@ -10,6 +10,9 @@ public class RoomMinWidthSettingNotValide : System.Exception
 public class RoomsTotalWidthSettingNotValide : System.Exception
 { }
 
+public class InvalidFloorIndex : System.Exception
+{ }
+
 public class RoomRandomizer
 {
     public class FloorCounts
@@ -18,6 +21,7 @@ public class RoomRandomizer
         public const int Six = 6;
     }
 
+    public const int FirstFloorIndex = 1;
     public const int MinWidth = 20; // has to be a multiple of WidthFractional
     public const int MaxWidth = 55; // has to be a multiple of WidthFractional
     public const int WidthFractional = 5;
@@ -54,14 +58,16 @@ public class RoomRandomizer
 
     private List<List<Room>> RandomizeFloors()
     {
-        var floorCount = rng.Next(FloorCounts.Three, FloorCounts.Six);
+        var floorCount = GetRandomFloorsCount();
 
-        return Enumerable.Range(1, floorCount)
-            .Select(floorIndex => new List<Room>(RandomizeRoomsOnFloor()))
+        return Enumerable.Range(FirstFloorIndex, floorCount)
+            .Select(floorIndex => new List<Room>(RandomizeRoomsOnFloor(floorIndex)))
             .ToList();
     }
 
-    List<Room> RandomizeRoomsOnFloor()
+    private int GetRandomFloorsCount() => rng.Next(FloorCounts.Three, FloorCounts.Six);
+
+    List<Room> RandomizeRoomsOnFloor(int floorIndex)
     {
         int floorWidth = 0;
 
@@ -81,7 +87,7 @@ public class RoomRandomizer
             }
 
             var room = Room.Create(
-                GetRoomType(), 
+                GetRandomRoomType(floorIndex), 
                 roomWidth);
             floor.Add(room);
 
@@ -115,10 +121,28 @@ public class RoomRandomizer
 
     }
 
-    public RoomType GetRoomType()
+    public RoomType GetRandomRoomType(int floorIndex)
     {
-        var maxRoomType = Enum.GetValues(typeof(RoomType)).Cast<int>().Max();
-        var index = rng.Next(1, maxRoomType);
-        return (RoomType)index;
+        if (floorIndex < FirstFloorIndex)
+        {
+            throw new InvalidFloorIndex();
+        }
+
+        if (floorIndex == 1)
+        {
+            return RoomType.Basement;
+        }
+
+        var roomTypes = GenerateArrayOfPossibleRoomTypes()
+            .Where(roomType => roomType != RoomType.Basement)
+            .ToArray();
+
+        int roomType = rng.Next(0, roomTypes.Length);
+        return roomTypes[roomType];
     }
+
+    private RoomType[] GenerateArrayOfPossibleRoomTypes() 
+        => Enum.GetValues(typeof(RoomType))
+            .Cast<RoomType>()
+            .ToArray();
 }

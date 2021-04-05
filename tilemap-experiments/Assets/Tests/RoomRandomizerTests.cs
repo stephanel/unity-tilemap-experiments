@@ -11,9 +11,40 @@ public class RoomRandomizerTests
     public void ShouldDefineARandomRoomType()
     {
         int maxRoomType = Enum.GetValues(typeof(RoomType)).Cast<int>().Max();
-        int roomType = (int)new RoomRandomizer(0).GetRoomType();
-        Assert.That(roomType, Is.GreaterThan(0));
+        var floorIndex = 1;
+        int roomType = (int)ExecuteGetRoomType(floorIndex);
+        Assert.That(roomType, Is.GreaterThanOrEqualTo(1));
         Assert.That(roomType, Is.LessThanOrEqualTo(maxRoomType));
+    }
+
+    [Test]
+    public void ShouldThrowInvalidFloorIndexWhenItIsLowerThanFirstFloorIndex()
+    {
+        var floorIndex = 0;
+        Assert.That(() => { ExecuteGetRoomType(floorIndex); },
+            Throws.Exception.TypeOf<InvalidFloorIndex>());
+    }
+
+    [Test]
+    public void ShouldDefineOnlyBasementsAtFloor1()
+    {
+        var floorIndex = 1;
+        var roomType = ExecuteGetRoomType(floorIndex);
+        Assert.That(roomType, Is.EqualTo(RoomType.Basement));
+    }
+
+    [Test]
+    [Repeat(1000)]
+    public void ShouldNotDefineBasementsAtFloorsHigherThanFloor1(
+        [NUnit.Framework.Range(2, RoomRandomizer.FloorCounts.Six)] int floorIndex)
+    {
+        var roomType = ExecuteGetRoomType(floorIndex);
+        Assert.That(roomType, Is.Not.EqualTo(RoomType.Basement));
+    }
+
+    private RoomType ExecuteGetRoomType(int floorIndex)
+    {
+        return new RoomRandomizer(0).GetRandomRoomType(floorIndex);
     }
 
     [Test]
