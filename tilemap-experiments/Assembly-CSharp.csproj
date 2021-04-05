@@ -37,6 +37,11 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Assets\Grid\Rooms\Floors\AtticFloor.cs" />
+    <Compile Include="Assets\Grid\Rooms\Floors\BaseFloor.cs" />
+    <Compile Include="Assets\Grid\Rooms\Floors\BasementFloor.cs" />
+    <Compile Include="Assets\Grid\Rooms\Floors\DefaultFloor.cs" />
+    <Compile Include="Assets\Grid\Rooms\Floors\FloorFactory.cs" />
     <Compile Include="Assets\Grid\Rooms\RoomType.cs" />
     <Compile Include="Assets\Scripts\SelectingRoom.cs" />
     <Compile Include="Assets\Grid\Rooms\RoomRandomizer.cs" />
@@ -736,8 +741,7 @@
       <HintPath>D:/projets/Unity/2d/unity-tilemap-experiments/tilemap-experiments/Library/ScriptAssemblies/Unity.2D.SpriteShape.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

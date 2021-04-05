@@ -59,9 +59,14 @@
     <Compile Include="Assets\Grid\Rooms\RoomRandomizer.cs" />
     <Compile Include="Assets\Grid\Rooms\RoomsGridTesting.cs" />
     <Compile Include="Assets\Grid\Rooms\Room.cs" />
+    <Compile Include="Assets\Grid\Rooms\RoomType.cs" />
     <Compile Include="Assets\Grid\Rooms\RoomsGrid.cs" />
     <Compile Include="Assets\Grid\Rooms\RoomsGridRenderer.cs" />
-    <Compile Include="Assets\Grid\Rooms\RoomType.cs" />
+    <Compile Include="Assets\Grid\Rooms\Floors\BasementFloor.cs" />
+    <Compile Include="Assets\Grid\Rooms\Floors\BaseFloor.cs" />
+    <Compile Include="Assets\Grid\Rooms\Floors\AtticFloor.cs" />
+    <Compile Include="Assets\Grid\Rooms\Floors\DefaultFloor.cs" />
+    <Compile Include="Assets\Grid\Rooms\Floors\FloorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Grid\Rooms\MyScriptAssembly.asmdef" />

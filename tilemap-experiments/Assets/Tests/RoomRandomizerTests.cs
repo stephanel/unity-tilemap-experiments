@@ -7,44 +7,90 @@ using UnityEngine.TestTools;
 public class RoomRandomizerTests
 {
     [Test]
+    public void FirstFloorIndexShouldBeEqualTo1()
+    {
+        Assert.That(RoomRandomizer.FirstFloorIndex, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void MinWidthShouldBeEqualTo20()
+    {
+        Assert.That(RoomRandomizer.MinWidth, Is.EqualTo(20));
+    }
+
+    [Test]
+    public void MinWidthShouldBeEqualTo55()
+    {
+        Assert.That(RoomRandomizer.MaxWidth, Is.EqualTo(55));
+    }
+
+    [Test]
+    public void WidthFractionalShouldBeEqualTo5()
+    {
+        Assert.That(RoomRandomizer.WidthFractional, Is.EqualTo(5));
+    }
+
+    [Test]
+    [Repeat(5000)]
+    public void ShouldNeverThrowInvalidFloorIndex()
+    {
+        Assert.That(() => { new RoomRandomizer(0).Randomize(); },
+            Throws.Nothing);
+    }
+
+    [Test]
     [Repeat(1000)]
     public void ShouldDefineARandomRoomType()
     {
         int maxRoomType = Enum.GetValues(typeof(RoomType)).Cast<int>().Max();
-        var floorIndex = 1;
-        int roomType = (int)ExecuteGetRoomType(floorIndex);
+        var floorIndex = 4;
+        var lastFloorIndex = 6;
+        int roomType = (int)ExecuteGetRoomType(floorIndex, lastFloorIndex);
         Assert.That(roomType, Is.GreaterThanOrEqualTo(1));
         Assert.That(roomType, Is.LessThanOrEqualTo(maxRoomType));
-    }
-
-    [Test]
-    public void ShouldThrowInvalidFloorIndexWhenItIsLowerThanFirstFloorIndex()
-    {
-        var floorIndex = 0;
-        Assert.That(() => { ExecuteGetRoomType(floorIndex); },
-            Throws.Exception.TypeOf<InvalidFloorIndex>());
     }
 
     [Test]
     public void ShouldDefineOnlyBasementsAtFloor1()
     {
         var floorIndex = 1;
-        var roomType = ExecuteGetRoomType(floorIndex);
+        var lastFloorIndex = 2;
+        var roomType = ExecuteGetRoomType(floorIndex, lastFloorIndex);
         Assert.That(roomType, Is.EqualTo(RoomType.Basement));
     }
 
     [Test]
+    public void ShouldDefineOnlyAtticsAtLastFloor()
+    {
+        var floorIndex = 1;
+        var lastFloorIndex = 1;
+        var roomType = ExecuteGetRoomType(floorIndex, lastFloorIndex);
+        Assert.That(roomType, Is.EqualTo(RoomType.Attic));
+    }
+
+    [Test]
     [Repeat(1000)]
-    public void ShouldNotDefineBasementsAtFloorsHigherThanFloor1(
+    public void ShouldNeverDefineBasementsAtFloorsHigherThanFloor1(
         [NUnit.Framework.Range(2, RoomRandomizer.FloorCounts.Six)] int floorIndex)
     {
-        var roomType = ExecuteGetRoomType(floorIndex);
+        var lastFloorIndex = RoomRandomizer.FloorCounts.Six;
+        var roomType = ExecuteGetRoomType(floorIndex, lastFloorIndex);
         Assert.That(roomType, Is.Not.EqualTo(RoomType.Basement));
     }
 
-    private RoomType ExecuteGetRoomType(int floorIndex)
+    [Test]
+    [Repeat(1000)]
+    public void ShouldNeverDefineAtticsAtFloorsLowerThanLastFloor(
+        [NUnit.Framework.Range(1, 5)] int floorIndex)
     {
-        return new RoomRandomizer(0).GetRandomRoomType(floorIndex);
+        var lastFloorIndex = RoomRandomizer.FloorCounts.Six;
+        var roomType = ExecuteGetRoomType(floorIndex, lastFloorIndex);
+        Assert.That(roomType, Is.Not.EqualTo(RoomType.Attic));
+    }
+
+    private RoomType ExecuteGetRoomType(int floorIndex, int lastFloorIndex)
+    {
+        return FloorFactory.Create(floorIndex, lastFloorIndex).GetRandomRoomType();
     }
 
     [Test]
@@ -57,9 +103,9 @@ public class RoomRandomizerTests
     [Test]
     public void ShouldGenerateArrayOfValideWidth()
     {
-        var arrayOfWidth = new RoomRandomizer(0).GenerateArrayOfPossibleWidthForRooms();
+        var arrayOfWidth = new DefaultFloor().GenerateArrayOfPossibleWidthForRooms();
 
-        CheckThatPossibleWidthForRoomsCount(arrayOfWidth.Length);
+        CheckPossibleWidthForRoomsCount(arrayOfWidth.Length);
 
         foreach (var width in arrayOfWidth)
         {
@@ -105,7 +151,7 @@ public class RoomRandomizerTests
         }
     }
 
-    void CheckThatPossibleWidthForRoomsCount(int possibleWidthCount)
+    void CheckPossibleWidthForRoomsCount(int possibleWidthCount)
     {
         int expectedValuesCount = (RoomRandomizer.MaxWidth - RoomRandomizer.MinWidth + RoomRandomizer.WidthFractional)
             / RoomRandomizer.WidthFractional;
